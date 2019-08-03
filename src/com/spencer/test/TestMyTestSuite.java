@@ -1,19 +1,22 @@
 package com.spencer.test;
 
-import org.junit.Test;
 
+import com.spencer.junit.MyPrinterListener;
+import com.spencer.junit.MyTestListener;
+import com.spencer.junit.MyTestResult;
 import com.spencer.junit.MyTestSuite;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 abstract class TestMyTestSuite {
 
 	
 	public static void main(String[] args) {
 		MyTestSuite suite = new MyTestSuite(TestMathsUtils.class);
-		suite.addTestSuite(TestMathsUtils.class);
-		suite.run();
+//		suite.addTestSuite(TestMathsUtils.class);
+		MyTestListener listener = new MyPrinterListener(System.out);
+		MyTestResult result = new MyTestResult();
+		result.addListener(listener);
+		suite.run(result);
+		System.out.println(suite.count());
 	}
 }

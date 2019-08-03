@@ -2,7 +2,7 @@ package com.spencer.junit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
+import static com.spencer.junit.MyAssert.fail;
 public class MyTestCase implements MyTest{
 
 	private String name;
@@ -21,12 +21,27 @@ public class MyTestCase implements MyTest{
 	}
 
 	@Override
-	public void run() {
+	public void run(MyTestResult result) {
+		result.run(this);
+
+	}
+	
+	public void runBare() {
+		before();
 		try {
-			Method method = getClass().getMethod(name, null);
+			runTest();
+		} finally {
+			after();
+		}
+	}
+	
+	public void runTest() {
+		Method method;
+		try {
+			method = getClass().getMethod(name, null);
 			method.invoke(this, null);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			fail("no such method");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -37,5 +52,12 @@ public class MyTestCase implements MyTest{
 			e.printStackTrace();
 		}
 	}
+	
+	public void before() {
+		
+	}
 
+	public void after() {
+		
+	}
 }

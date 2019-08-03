@@ -4,5 +4,5 @@ public interface MyTest {
 
 	public int count();
 	
-	public void run();
+	public void run(MyTestResult result);
 }

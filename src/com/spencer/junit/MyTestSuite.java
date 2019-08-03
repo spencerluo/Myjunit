@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import static com.spencer.junit.MyAssert.fail;
 
-import org.junit.Test;
 
 public class MyTestSuite implements MyTest{
 	
@@ -14,6 +14,7 @@ public class MyTestSuite implements MyTest{
 	public MyTestSuite(Class clazz) {
 		if (clazz.getModifiers() != 1) {
 			warn(clazz + "'s modifier is not public");
+			return;
 		}
 	
 		for (Method method: clazz.getMethods()) {
@@ -54,19 +55,28 @@ public class MyTestSuite implements MyTest{
 		return name.startsWith("test") && parameters.length == 0 && returnType == Void.TYPE;
 	}
 
-	private void warn(String string) {
-		
+	private void warn(String message) {
+		addTest(new MyTestCase() {
+			public void runTest() {
+				fail(message);
+			}
+		});
 	}
 
 	@Override
 	public int count() {
-		return 0;
+		int counts = 0;
+		for (MyTest test: tests) {
+			counts += test.count();
+		}
+		
+		return counts;
 	}
 
 	@Override
-	public void run() {
+	public void run(MyTestResult result) {
 		for (MyTest test: tests) {
-			test.run();
+			test.run(result);
 		}
 	}
 
